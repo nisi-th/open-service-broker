@@ -15,7 +15,7 @@ import spock.lang.Stepwise
 
 import javax.transaction.Transactional
 
-@IgnoreIf({ !Boolean.valueOf(System.properties['com.swisscom.cloud.sb.broker.run3rdPartyDependentTests']) })
+//@IgnoreIf({ !Boolean.valueOf(System.properties['com.swisscom.cloud.sb.broker.run3rdPartyDependentTests']) })
 class ElasticSearchFunctionalSpec extends BaseFunctionalSpec {
     @Autowired
     private ApplicationContext appContext

@@ -12,8 +12,11 @@ import com.swisscom.cloud.sb.broker.provisioning.async.AsyncOperationResult
 import com.swisscom.cloud.sb.broker.provisioning.lastoperation.LastOperationJobContext
 import com.swisscom.cloud.sb.broker.provisioning.statemachine.ServiceStateWithAction
 import com.swisscom.cloud.sb.broker.provisioning.statemachine.StateMachine
-import com.swisscom.cloud.sb.broker.services.bosh.BoshBasedServiceProvider
+import com.swisscom.cloud.sb.broker.services.AsyncServiceProvider
+import com.swisscom.cloud.sb.broker.services.bosh.BoshFacade
+import com.swisscom.cloud.sb.broker.services.bosh.BoshFacadeFactory
 import com.swisscom.cloud.sb.broker.services.bosh.BoshTemplate
+import com.swisscom.cloud.sb.broker.services.bosh.BoshTemplateCustomizer
 import com.swisscom.cloud.sb.broker.services.bosh.statemachine.BoshStateMachineFactory
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacade
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacadeFactory
@@ -33,7 +36,7 @@ import javax.annotation.PostConstruct
 @Component
 @CompileStatic
 @Slf4j
-class ElasticSearchServiceProvider extends BoshBasedServiceProvider<ElasticSearchConfig> {
+class ElasticSearchServiceProvider extends AsyncServiceProvider<ElasticSearchConfig> implements BoshTemplateCustomizer {
     public static final String SEARCHGUARD_USERNAME = 'searchguard-username'
     public static final String SEARCHGUARD_PASSWORD = 'searchguard-password'
     public static final String PORT_HTTP = 'http-port'
@@ -45,6 +48,9 @@ class ElasticSearchServiceProvider extends BoshBasedServiceProvider<ElasticSearc
 
     @Autowired
     protected ElasticSearchFreePortFinder elasticSearchFreePortFinder
+    @Autowired
+
+    protected BoshFacadeFactory boshFacadeFactory
 
     @PostConstruct
     void init() {
@@ -148,5 +154,9 @@ class ElasticSearchServiceProvider extends BoshBasedServiceProvider<ElasticSearc
             deprovisionState = ElasticSearchDeprovisionState.of(context.lastOperation.internalState)
         }
         return deprovisionState
+    }
+
+    private BoshFacade getBoshFacade() {
+        return boshFacadeFactory.build(serviceConfig)
     }
 }

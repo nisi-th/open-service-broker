@@ -6,7 +6,7 @@ import com.swisscom.cloud.sb.broker.model.ProvisionRequest
 import com.swisscom.cloud.sb.broker.model.ServiceDetail
 import com.swisscom.cloud.sb.broker.model.ServiceInstance
 import com.swisscom.cloud.sb.broker.provisioning.lastoperation.LastOperationJobContext
-import com.swisscom.cloud.sb.broker.services.bosh.AbstractBoshBasedServiceProviderSpec
+import com.swisscom.cloud.sb.broker.services.bosh.AbstractAsyncServiceProviderSpec
 import com.swisscom.cloud.sb.broker.services.bosh.BoshTemplate
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacade
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacadeFactory
@@ -16,7 +16,7 @@ import com.swisscom.cloud.sb.broker.util.ServiceDetailsHelper
 import com.swisscom.cloud.sb.broker.util.StringGenerator
 import groovy.json.JsonSlurper
 
-class ElasticSearchServiceProviderSpec extends AbstractBoshBasedServiceProviderSpec<ElasticSearchServiceProvider> {
+class ElasticSearchServiceProviderSpec extends AbstractAsyncServiceProviderSpec<ElasticSearchServiceProvider> {
     private String serviceInstanceGuid = 'serviceInstanceGuid'
     private SearchGuardFacade searchGuardFacade
 
