@@ -1,10 +1,10 @@
 package com.swisscom.cloud.sb.broker.services.elasticsearch.statemachine
 
-import com.swisscom.cloud.sb.broker.services.common.UsernamePasswordGenerator
 import com.swisscom.cloud.sb.broker.services.elasticsearch.ElasticSearchConfig
 import com.swisscom.cloud.sb.broker.services.elasticsearch.ElasticSearchFreePortFinder
 import com.swisscom.cloud.sb.broker.util.ServiceDetailKey
 import com.swisscom.cloud.sb.broker.util.ServiceDetailsHelper
+import com.swisscom.cloud.sb.broker.util.StringGenerator
 import spock.lang.Specification
 
 class ElasticSearchProvisionStateSpec extends Specification {
@@ -32,9 +32,9 @@ class ElasticSearchProvisionStateSpec extends Specification {
 
     def "GENERATE_USERNAME_PASSWORD"() {
         given:
-        GroovyMock(UsernamePasswordGenerator, global: true)
-        UsernamePasswordGenerator.generateUsername() >> "highsecureusername"
-        UsernamePasswordGenerator.generatePassword() >> "highsecurepassword"
+        GroovyMock(StringGenerator, global: true)
+        StringGenerator.randomAlphaNumericOfLength16() >> "highsecureusername"
+        StringGenerator.randomAlphaNumeric(_) >> "highsecurepassword"
 
         when:
         def result = ElasticSearchProvisionState.GENERATE_USERNAME_PASSWORD.triggerAction(context)

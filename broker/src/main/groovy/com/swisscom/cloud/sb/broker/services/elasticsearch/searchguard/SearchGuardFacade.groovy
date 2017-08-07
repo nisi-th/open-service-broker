@@ -2,17 +2,15 @@ package com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard
 
 import com.google.common.annotations.VisibleForTesting
 import com.swisscom.cloud.sb.broker.model.repository.ServiceInstanceRepository
-import com.swisscom.cloud.sb.broker.services.common.UsernamePasswordGenerator
 import com.swisscom.cloud.sb.broker.services.elasticsearch.ElasticSearchBindResponseDto
 import com.swisscom.cloud.sb.broker.services.elasticsearch.ElasticSearchConfig
+import com.swisscom.cloud.sb.broker.util.StringGenerator
 import groovy.json.JsonBuilder
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.apache.commons.codec.binary.Base64
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.json.BasicJsonParser
 import org.springframework.security.crypto.bcrypt.BCrypt
-import org.springframework.stereotype.Component
 
 @Slf4j
 @CompileStatic
@@ -33,8 +31,8 @@ class SearchGuardFacade {
     }
 
     ElasticSearchBindResponseDto createSearchGuardUser() {
-        String username = UsernamePasswordGenerator.generateUsername()
-        String password = UsernamePasswordGenerator.generatePassword()
+        String username = StringGenerator.randomAlphaNumericOfLength16()
+        String password =  StringGenerator.randomAlphaNumeric(30)
         addInternalUser(username, password)
         addCustRolesMapping(username)
         new ElasticSearchBindResponseDto(

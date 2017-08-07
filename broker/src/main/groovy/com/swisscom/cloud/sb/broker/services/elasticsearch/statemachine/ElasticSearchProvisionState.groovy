@@ -7,8 +7,8 @@ import com.swisscom.cloud.sb.broker.provisioning.statemachine.ServiceStateWithAc
 import com.swisscom.cloud.sb.broker.provisioning.statemachine.StateChangeActionResult
 import com.swisscom.cloud.sb.broker.provisioning.statemachine.action.NoOp
 import com.swisscom.cloud.sb.broker.services.bosh.statemachine.BoshProvisionState
-import com.swisscom.cloud.sb.broker.services.common.UsernamePasswordGenerator
 import com.swisscom.cloud.sb.broker.util.ServiceDetailKey
+import com.swisscom.cloud.sb.broker.util.StringGenerator
 import groovy.util.logging.Slf4j
 
 import static com.swisscom.cloud.sb.broker.model.ServiceDetail.from
@@ -30,8 +30,8 @@ enum ElasticSearchProvisionState implements ServiceStateWithAction<ElasticSearch
         @Override
         StateChangeActionResult triggerAction(ElasticSearchStateMachineContext stateContext) {
             return new StateChangeActionResult(go2NextState: true, details: [
-                    from(ServiceDetailKey.ELASTIC_SEARCH_USER, UsernamePasswordGenerator.generateUsername()),
-                    from(ServiceDetailKey.ELASTIC_SEARCH_PASSWORD, UsernamePasswordGenerator.generatePassword())
+                    from(ServiceDetailKey.ELASTIC_SEARCH_USER,  StringGenerator.randomAlphaNumericOfLength16()),
+                    from(ServiceDetailKey.ELASTIC_SEARCH_PASSWORD,  StringGenerator.randomAlphaNumeric(30))
             ])
         }
     }),

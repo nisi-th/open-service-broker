@@ -8,12 +8,12 @@ import com.swisscom.cloud.sb.broker.model.ServiceInstance
 import com.swisscom.cloud.sb.broker.provisioning.lastoperation.LastOperationJobContext
 import com.swisscom.cloud.sb.broker.services.bosh.AbstractBoshBasedServiceProviderSpec
 import com.swisscom.cloud.sb.broker.services.bosh.BoshTemplate
-import com.swisscom.cloud.sb.broker.services.common.UsernamePasswordGenerator
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacade
 import com.swisscom.cloud.sb.broker.services.elasticsearch.searchguard.SearchGuardFacadeFactory
 import com.swisscom.cloud.sb.broker.services.elasticsearch.statemachine.ElasticSearchProvisionState
 import com.swisscom.cloud.sb.broker.util.ServiceDetailKey
 import com.swisscom.cloud.sb.broker.util.ServiceDetailsHelper
+import com.swisscom.cloud.sb.broker.util.StringGenerator
 import groovy.json.JsonSlurper
 
 class ElasticSearchServiceProviderSpec extends AbstractBoshBasedServiceProviderSpec<ElasticSearchServiceProvider> {
@@ -107,8 +107,8 @@ class ElasticSearchServiceProviderSpec extends AbstractBoshBasedServiceProviderS
 
         and:
         1 * searchGuardFacade.createSearchGuardUser() >> new ElasticSearchBindResponseDto(
-                username: UsernamePasswordGenerator.generateUsername(),
-                password: UsernamePasswordGenerator.generatePassword(),
+                username: StringGenerator.randomAlphaNumericOfLength16(),
+                password: StringGenerator.randomAlphaNumeric(30),
                 hosts: ["host1", "host2"],
                 port: 9200
         )
