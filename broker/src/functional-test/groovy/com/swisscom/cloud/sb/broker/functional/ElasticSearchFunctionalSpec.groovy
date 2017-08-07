@@ -33,7 +33,7 @@ class ElasticSearchFunctionalSpec extends BaseFunctionalSpec {
     private ServiceInstanceRepository serviceInstanceRepository
 
     def setup() {
-        serviceLifeCycler.createServiceIfDoesNotExist('elasticsearch', ServiceProviderLookup.findInternalName(ElasticSearchServiceProvider), 'bosh-deployment-teamplate-elasticsearch')
+        serviceLifeCycler.createServiceIfDoesNotExist('elasticsearch', ServiceProviderLookup.findInternalName(ElasticSearchServiceProvider), 'sc1-bosh-deployment-teamplate-elasticsearch')
         def plan = serviceLifeCycler.plan
         serviceLifeCycler.createParameter(BoshFacade.PLAN_PARAMETER_BOSH_VM_INSTANCE_TYPE, 'elasticsearch-service', plan)
     }
