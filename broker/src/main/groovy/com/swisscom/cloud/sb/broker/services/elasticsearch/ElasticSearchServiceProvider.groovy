@@ -102,8 +102,6 @@ class ElasticSearchServiceProvider extends BoshBasedServiceProvider<ElasticSearc
     private SearchGuardFacade createSearchGuardFacade(ServiceInstance serviceInstance) {
         def hosts = ServiceDetailsHelper.from(serviceInstance.details).findAllWithServiceDetailType(ServiceDetailType.HOST)
         def port = ServiceDetailsHelper.from(serviceInstance.details).findValue(ServiceDetailKey.ELASTIC_SEARCH_PORT)
-        // Use for functional testing
-        // return searchGuardFacadeFactory.build(["localhost"], 9201)
         return searchGuardFacadeFactory.build(hosts, port.get().toInteger())
     }
 

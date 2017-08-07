@@ -45,6 +45,7 @@ com.swisscom.cloud.sb.broker:
       boshManifestFolder: 'test/resources/bosh'
       clientKeystorePath:
       clientKeystorePassword:
+      useLocalhostForTesting:
 
     mongodbent:
       opsManagerUrl: 'http://localhost:55000'

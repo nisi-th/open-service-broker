@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration
 class ElasticSearchConfig implements BoshBasedServiceConfig {
     String clientKeystorePath
     String clientKeystorePassword
+    Boolean useLocalhostForTesting
 }
