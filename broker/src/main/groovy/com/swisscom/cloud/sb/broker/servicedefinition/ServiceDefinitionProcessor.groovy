@@ -21,6 +21,7 @@ import com.swisscom.cloud.sb.broker.model.repository.ServiceInstanceRepository
 import com.swisscom.cloud.sb.broker.model.repository.TagRepository
 import com.swisscom.cloud.sb.broker.servicedefinition.converter.ServiceDtoConverter
 import com.swisscom.cloud.sb.broker.servicedefinition.dto.ServiceDto
+import com.swisscom.cloud.sb.broker.services.common.SchemaFormService
 import com.swisscom.cloud.sb.broker.services.common.ServiceProviderLookup
 import com.swisscom.cloud.sb.broker.util.JsonHelper
 import com.swisscom.cloud.sb.broker.util.JsonSchemaHelper
@@ -57,6 +58,9 @@ class ServiceDefinitionProcessor {
     private CFServicePermissionRepository servicePermissionRepository
     @Autowired
     private ParameterRepository parameterRepository
+
+    @Autowired
+    private SchemaFormService schemaFormService
 
     def createOrUpdateServiceDefinition(String content) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(content),"Service Definition can't be empty")
@@ -263,27 +267,35 @@ class ServiceDefinitionProcessor {
         plan.asyncRequired = planJson.asyncRequired
         plan.maxBackups = planJson.maxBackups
 
-        validateJsonSchema(planJson.schemas?.service_instance?.create?.parameters, 'ServiceInstanceCreate')
-        validateJsonSchema(planJson.schemas?.service_instance?.update?.parameters, 'ServiceInstanceUpdate')
-        validateJsonSchema(planJson.schemas?.service_binding?.create?.parameters, 'ServiceBindingCreate')
+        if (planJson.schemas?.service_instance?.create?.parameters)
+            plan.serviceInstanceCreateSchema = schemaFormService.serializeAndPrepareSchema(
+                    planJson.schemas?.service_instance?.create?.parameters,
+                    service.guid,
+                    plan.guid,
+                    "service_instance",
+                    "create"
+            )
 
-        plan.serviceInstanceCreateSchema = JsonHelper.toJsonString(planJson.schemas?.service_instance?.create?.parameters)
-        plan.serviceInstanceUpdateSchema = JsonHelper.toJsonString(planJson.schemas?.service_instance?.update?.parameters)
-        plan.serviceBindingCreateSchema = JsonHelper.toJsonString(planJson.schemas?.service_binding?.create?.parameters)
+        if (planJson.schemas?.service_instance?.update?.parameters)
+            plan.serviceInstanceUpdateSchema = schemaFormService.serializeAndPrepareSchema(
+                    planJson.schemas?.service_instance?.update?.parameters,
+                    service.guid,
+                    plan.guid,
+                    "service_instance",
+                    "update"
+            )
+
+        if (planJson.schemas?.service_binding?.create?.parameters)
+            plan.serviceBindingCreateSchema = schemaFormService.serializeAndPrepareSchema(
+                    planJson.schemas?.service_binding?.create?.parameters,
+                    service.guid,
+                    plan.guid,
+                    "service_binding",
+                    "create"
+            )
 
         checkBackupSanity(service, plan)
         return planRepository.save(plan)
-    }
-
-    private def validateJsonSchema(Object o, String schemaName) {
-        def json = JsonHelper.toJsonString(o)
-        if (json) {
-            def validationMessages = JsonSchemaHelper.validateJson(json)
-            if (!validationMessages.isEmpty()) {
-                log.error("Invalid schema for ${schemaName}: " + JsonHelper.toJsonString(validationMessages))
-                ErrorCode.INVALID_PLAN_SCHEMAS.throwNew()
-            }
-        }
     }
 
     private def checkBackupSanity(CFService cfService, Plan plan) {

@@ -136,3 +136,8 @@ com.swisscom.cloud.sb.broker.serviceTemplates:
       kind: Deployment
       metadata:
         name:
+
+com.swisscom.cloud.sb.broker.jsonSchema:
+  hostname: 'localhost'
+  protocol: 'http'
+  port: 8080
