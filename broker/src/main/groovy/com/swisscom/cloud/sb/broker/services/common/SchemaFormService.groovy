@@ -44,7 +44,7 @@ class SchemaFormService {
     }
 
     String serializeAndPrepareSchema(Object schema, String serviceGuid, String planGuid, String serviceReference, String method) {
-        schema = AddOrUpdateId(schema, serviceGuid, planGuid, serviceReference, method)
+        schema = addOrUpdateId(schema, serviceGuid, planGuid, serviceReference, method)
 
         def serializedSchema = JsonHelper.toJsonString(schema)
         def validationMessages = JsonSchemaHelper.validateJson(serializedSchema)
@@ -56,18 +56,10 @@ class SchemaFormService {
         serializedSchema
     }
 
-    private Object AddOrUpdateId(Object schema, String serviceGuid, String planGuid, String serviceReference, String method) {
-        String uri = getSchemaUri(serviceGuid, planGuid, serviceReference, method)
+    private Object addOrUpdateId(Map schema, String serviceGuid, String planGuid, String serviceReference, String method) {
+        schema.put("id", getSchemaUri(serviceGuid, planGuid, serviceReference, method))
 
-        if (schema.hasProperty("id")) {
-            schema.id = uri
-            return schema
-        }
-
-        def expandoObject = new Expando(schema)
-        expandoObject.id = uri
-
-        expandoObject
+        schema
     }
 
     private String getSchemaUri(String serviceGuid, String planGuid, String serviceReference, String method) {
@@ -83,4 +75,6 @@ class SchemaFormService {
                         method
                 ])
     }
+
+
 }
