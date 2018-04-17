@@ -1,8 +1,9 @@
 package com.swisscom.cloud.sb.broker.util.jsonSchema.validators
 
 import com.swisscom.cloud.sb.broker.util.jsonSchema.models.JsonSchema
+import com.swisscom.cloud.sb.broker.util.jsonSchema.models.JsonSchemaProperty
 
-class AbstractValidationProcessor implements ValidationProcessor {
+abstract class AbstractValidationProcessor implements ValidationProcessor {
     protected final JsonSchema jsonSchema
 
     protected AbstractValidationProcessor(JsonSchema jsonSchema)
@@ -12,6 +13,14 @@ class AbstractValidationProcessor implements ValidationProcessor {
 
     @Override
     List<ValidationError> validate(Map object) {
-        return null
+        List<ValidationError> errors = new ArrayList<ValidationError>()
+
+        for (def property in jsonSchema.properties) {
+            errors.add(validateProperty(property.key, property.value, object.get(property.key)))
+        }
+
+        errors
     }
+
+    protected abstract ValidationError validateProperty(String propertyName, JsonSchemaProperty jsonSchemaProperty, objectProperty)
 }
